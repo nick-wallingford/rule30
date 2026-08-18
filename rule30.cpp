@@ -20,6 +20,31 @@ static void report(uint64_t a, uint64_t b, uint64_t c, uint64_t i) {
     std::terminate();
 }
 
+void rule30_128() {
+  puts("Performing 128 bit integer version");
+  // state size is 128 bits.
+  // all bits of both elements are always valid.
+
+  uint64_t a = 0, b = 1;
+  for (uint64_t i = 0;;) {
+    const uint64_t next = i + 1;
+    if (!(i & next))
+      if (0 > printf("%4d%4d %016lx %016lx\n", std::countr_one(i),
+                     b == 0xffff'ffff'ffff'ffffllu ? std::countr_one(a) + 64 : std::countr_one(b), a, b))
+        std::terminate();
+// second one uses two shld instructions and one or instruction.
+// first one uses four shift instructions and 3 or instructions.
+// on my machine shld is very slow. ymmv.
+#if 1
+    a ^= a << 1 | a << 2 | b >> 63 | b >> 62;
+#else
+    a ^= (a << 1 | b >> 63) | (a << 2 | b >> 62);
+#endif
+    b ^= b << 1 | b << 2;
+    i = next;
+  }
+}
+
 void rule30_scalar() {
   puts("Performing scalar version");
   // state size is 160 bits.
@@ -102,6 +127,8 @@ int main(int c, char **argv) {
       rule30_avx2();
     else if (!strcmp(argv[1], "-avx512"))
       rule30_avx512();
+    else if (!strcmp(argv[1], "-128"))
+      rule30_128();
     else if (!strcmp(argv[1], "-scalar"))
       rule30_scalar();
     else
