@@ -2,6 +2,7 @@
 #include <array>
 #include <bit>
 #include <cstdio>
+#include <exception>
 
 void report(__m256i x, uint64_t i) {
   std::array<uint32_t, 8> a;
@@ -17,7 +18,8 @@ void report(__m256i x, uint64_t i) {
     n = std::countr_one(a[3]) + 96;
   else
     n = std::countr_one(a[1]) + 128;
-  printf("%4d%4d %08x %08x %08x %08x %08x\n", std::countr_one(i), n, a[1], a[3], a[5], a[7], a[6]);
+  if (0 > printf("%4d%4d %08x %08x %08x %08x %08x\n", std::countr_one(i), n, a[1], a[3], a[5], a[7], a[6]))
+    std::terminate();
 }
 
 void rule30_avx2() {

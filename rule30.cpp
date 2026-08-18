@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <exception>
 
 static void report(uint64_t a, uint64_t b, uint64_t c, uint64_t i) {
   int n;
@@ -15,7 +16,8 @@ static void report(uint64_t a, uint64_t b, uint64_t c, uint64_t i) {
   else
     n = std::countr_one(a) + 64 + 48;
 
-  printf("%4d%4d %012lx %012lx %016lx\n", std::countr_one(i), n, a, b, c);
+  if (0 > printf("%4d%4d %012lx %012lx %016lx\n", std::countr_one(i), n, a, b, c))
+    std::terminate();
 }
 
 void rule30_scalar() {
@@ -89,6 +91,7 @@ void rule30_scalar() {
 }
 
 int main(int c, char **argv) {
+  setbuf(stdout, NULL);
   if (c > 1)
     if (!strcmp(argv[1], "-avx2"))
       rule30_avx2();
