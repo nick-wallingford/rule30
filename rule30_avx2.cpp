@@ -24,6 +24,9 @@ void report(__m256i x, uint64_t i) {
 
 void rule30_avx2() {
   puts("Performing AVX2 version");
+  // state size is 160 bits.
+  // first three elements are only valid for upper 32 bits.
+  // final element is valid for all 64 bits.
   __m256i x = _mm256_setr_epi64x(0, 0, 0, 1);
   report(x, 0);
   x = _mm256_xor_si256(x, _mm256_or_si256(_mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2)));
@@ -49,6 +52,9 @@ void rule30_avx2() {
   const __m256i shuffle = _mm256_setr_epi32(3, 1, 5, 3, 7, 5, 6, 7);
 
   for (uint64_t i = 15;;) {
+    // update elements.
+    // these 16 lines updates the upper 32 bit of all 4 elements
+    // and the lower 32 bits of the final element.
     x = _mm256_xor_si256(x, _mm256_or_si256(_mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2)));
     x = _mm256_xor_si256(x, _mm256_or_si256(_mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2)));
     x = _mm256_xor_si256(x, _mm256_or_si256(_mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2)));
@@ -65,6 +71,8 @@ void rule30_avx2() {
     x = _mm256_xor_si256(x, _mm256_or_si256(_mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2)));
     x = _mm256_xor_si256(x, _mm256_or_si256(_mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2)));
     x = _mm256_xor_si256(x, _mm256_or_si256(_mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2)));
+    // reconstitute.
+    // this fixes the lower 32 bits of the first three elements.
     x = _mm256_permutevar8x32_epi32(x, shuffle);
     i += 16;
     if (!(i & (i + 1)))

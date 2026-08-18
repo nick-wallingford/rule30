@@ -22,6 +22,7 @@ static void report(uint64_t a, uint64_t b, uint64_t c, uint64_t i) {
 
 void rule30_scalar() {
   puts("Performing scalar version");
+  // state size is 160 bits.
   // all 64 bits of c are always valid.
   // upper 48 bits of a and b are always valid.
   // lower 16 bits of a and b are only valid between reconstitute and DO steps
@@ -53,6 +54,8 @@ void rule30_scalar() {
   report(a, b, c, 7);
 
   for (uint64_t i = 7;;) {
+    // update.
+    // this invalidates lower 16 bits of a and b.
     a ^= a << 1 | a << 2;
     b ^= b << 1 | b << 2;
     c ^= c << 1 | c << 2;
@@ -78,6 +81,8 @@ void rule30_scalar() {
     b ^= b << 1 | b << 2;
     c ^= c << 1 | c << 2;
 
+    // reconstitute.
+    // this revalidates the lower 16 bits of a and b.
     a &= 0xffff'ffff'ffff'0000llu;
     a |= b >> 48;
     b &= 0xffff'ffff'ffff'0000llu;
