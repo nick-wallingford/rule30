@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <exception>
 
-void report(__m256i x, uint64_t i) {
+void __attribute__((noinline)) report(__m256i x, uint64_t i) {
   std::array<uint32_t, 8> a;
   x = _mm256_permutevar8x32_epi32(x, _mm256_set_epi32(0, 0, 0, 1, 3, 5, 7, 6));
   _mm256_storeu_si256(reinterpret_cast<__m256i *>(a.data()), x);
