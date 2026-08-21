@@ -92,10 +92,8 @@ int main(int c, const char **argv) {
         rule30_avx2(f, begin, begin_state);
         break;
       case cpu::scalar:
-        rule30_scalar(f, begin, begin_state);
-        break;
       case cpu::i128:
-        puts("i128 mode cannot specify begin state");
+        puts("i128 and scalar mode cannot specify begin state");
         return 5;
       }
     else

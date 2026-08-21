@@ -26,6 +26,6 @@ void rule30_128();
 void rule30_scalar(save_state);
 void rule30_avx2(save_state);
 void rule30_avx512(save_state);
-void rule30_scalar(save_state, uint64_t, const char[40]);
+// void rule30_scalar(save_state, uint64_t, const char[40]);
 void rule30_avx2(save_state, uint64_t, const char[40]);
 void rule30_avx512(save_state, uint64_t, const char[40]);

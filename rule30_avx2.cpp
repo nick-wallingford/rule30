@@ -65,9 +65,9 @@ static void __attribute__((noinline)) rule30_avx2(save_state ss_func, uint64_t i
     x = _mm256_permutevar8x32_epi32(x, shuffle);
     i += 16;
     const uint64_t next = i + 1;
-    if (!(next & interval) && ss_func)
+    if (!(next & interval) && ss_func) [[unlikely]]
       ss_func(i, convert_state(x));
-    if (!(i & next))
+    if (!(i & next)) [[unlikely]]
       report(x, i);
   }
 }

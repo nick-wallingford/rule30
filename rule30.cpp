@@ -151,4 +151,4 @@ void rule30_scalar(save_state ss_func) {
   }
 }
 
-void rule30_scalar(save_state, uint64_t, const char[40]) {}
+// void rule30_scalar(save_state, uint64_t, const char[40]) {}

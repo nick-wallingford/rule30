@@ -27,9 +27,9 @@ static void __attribute__((noinline)) rule30_avx512(save_state ss_func, uint64_t
     i += 16;
 
     const uint64_t next = i + 1;
-    if (!(next & interval) && ss_func)
+    if (!(next & interval) && ss_func) [[unlikely]]
       ss_func(i, convert_state(x));
-    if (!(i & next))
+    if (!(i & next)) [[unlikely]]
       report(x, i);
   }
 }
