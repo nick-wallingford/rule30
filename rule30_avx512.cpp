@@ -3,33 +3,10 @@
 
 static constexpr int xor_or = _MM_TERNLOG_A ^ (_MM_TERNLOG_B | _MM_TERNLOG_C);
 
-void rule30_avx512(save_state ss_func) {
-  puts("Performing AVX512 version");
-  __m256i x = _mm256_setr_epi64x(0, 0, 0, 1);
-  report(x, 0);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  report(x, 1);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  report(x, 3);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  report(x, 7);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
-  report(x, 15);
-
+static void __attribute__((noinline)) rule30_avx512(save_state ss_func, uint64_t i, __m256i x) {
   const __m256i shuffle = _mm256_setr_epi32(3, 1, 5, 3, 7, 5, 6, 7);
 
-  for (uint64_t i = 15;;) {
+  for (;;) {
     x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
     x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
     x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
@@ -57,4 +34,34 @@ void rule30_avx512(save_state ss_func) {
   }
 }
 
-void rule30_avx512(save_state, uint64_t, const char[40]) {}
+void rule30_avx512(save_state ss_func) {
+  puts("Performing AVX512 version");
+  __m256i x = _mm256_setr_epi64x(0, 0, 0, 1);
+  report(x, 0);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  report(x, 1);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  report(x, 3);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  report(x, 7);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
+  report(x, 15);
+
+  rule30_avx512(ss_func, 15, x);
+}
+
+void rule30_avx512(save_state ss_func, uint64_t i, const char s[40]) {
+  puts("Performing AVX512 version");
+  rule30_avx512(ss_func, i, eval_to_vector(s));
+}
