@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <exception>
+#include <print>
 
 static void report(uint64_t a, uint64_t b, uint64_t c, uint64_t i) {
   int n;
@@ -27,6 +28,24 @@ std::array<uint32_t, 5> convert_state(uint64_t a, uint64_t b, uint64_t c) {
   retval[1] = static_cast<uint32_t>(b >> 48) | static_cast<uint32_t>(a & 0xffff'0000);
   retval[0] = static_cast<uint32_t>(a >> 32);
   return retval;
+}
+
+uint32_t string_to_hex(std::string_view s) {
+  uint32_t r = 0;
+  for (const auto c : s) {
+    r <<= 4;
+    if ('0' <= c && c <= '9')
+      r |= c - '0';
+    else if ('a' <= c && c <= 'f')
+      r |= 10 + c - 'a';
+    else if ('A' <= c && c <= 'F')
+      r |= 10 + c - 'A';
+    else {
+      std::println("not a hex string: {}", s);
+      std::terminate();
+    }
+  }
+  return r;
 }
 
 void rule30_128() {
@@ -131,3 +150,5 @@ void rule30_scalar(save_state ss_func) {
       report(a, b, c, i);
   }
 }
+
+void rule30_scalar(save_state, uint64_t, const char[40]) {}

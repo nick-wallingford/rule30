@@ -56,3 +56,5 @@ void rule30_avx512(save_state ss_func) {
       report(x, i);
   }
 }
+
+void rule30_avx512(save_state, uint64_t, const char[40]) {}
