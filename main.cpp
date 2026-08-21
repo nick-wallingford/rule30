@@ -28,6 +28,8 @@ static void save_state_func(uint64_t i, const std::array<uint32_t, 5> &a) {
   std::ofstream f{cert_path, std::ios_base::app};
   const std::string s = std::format("{} {:08x}{:08x}{:08x}{:08x}{:08x}\n", i, a[0], a[1], a[2], a[3], a[4]);
   f << s;
+  if (f.bad())
+    std::terminate();
 }
 
 int main(int c, const char **argv) {
