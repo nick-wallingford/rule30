@@ -2,7 +2,6 @@
 #include <bit>
 #include <cstdint>
 #include <cstdio>
-#include <cstring>
 #include <exception>
 
 static void report(uint64_t a, uint64_t b, uint64_t c, uint64_t i) {
@@ -18,6 +17,16 @@ static void report(uint64_t a, uint64_t b, uint64_t c, uint64_t i) {
 
   if (0 > printf("%4d%4d %012lx %012lx %016lx\n", std::countr_one(i), n, a, b, c))
     std::terminate();
+}
+
+std::array<uint32_t, 5> convert_state(uint64_t a, uint64_t b, uint64_t c) {
+  std::array<uint32_t, 5> retval;
+  retval[4] = static_cast<uint32_t>(c);
+  retval[3] = static_cast<uint32_t>(c >> 32);
+  retval[2] = static_cast<uint32_t>(b >> 16);
+  retval[1] = static_cast<uint32_t>(b >> 48) | static_cast<uint32_t>(a & 0xffff'0000);
+  retval[0] = static_cast<uint32_t>(a >> 32);
+  return retval;
 }
 
 void rule30_128() {
@@ -45,7 +54,7 @@ void rule30_128() {
   }
 }
 
-void rule30_scalar() {
+void rule30_scalar(save_state ss_func) {
   puts("Performing scalar version");
   // state size is 160 bits.
   // all 64 bits of c are always valid.
@@ -115,28 +124,10 @@ void rule30_scalar() {
 
     i += 8;
 
-    if (!(i & (i + 1)))
+    const uint64_t next = i + 1;
+    if (!(next & interval) && ss_func)
+      ss_func(i, convert_state(a, b, c));
+    if (!(i & next))
       report(a, b, c, i);
   }
-}
-
-int main(int c, char **argv) {
-  setbuf(stdout, NULL);
-  if (c > 1)
-    if (!strcmp(argv[1], "-avx2"))
-      rule30_avx2();
-    else if (!strcmp(argv[1], "-avx512"))
-      rule30_avx512();
-    else if (!strcmp(argv[1], "-128"))
-      rule30_128();
-    else if (!strcmp(argv[1], "-scalar"))
-      rule30_scalar();
-    else
-      puts("options:\n  -avx512\n  -avx2\n  -scalar");
-  else if (__builtin_cpu_supports("x86-64-v4"))
-    rule30_avx512();
-  else if (__builtin_cpu_supports("x86-64-v3"))
-    rule30_avx2();
-  else
-    rule30_scalar();
 }

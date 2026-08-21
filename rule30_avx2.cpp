@@ -20,7 +20,15 @@ void __attribute__((noinline)) report(__m256i x, uint64_t i) {
     std::terminate();
 }
 
-void rule30_avx2() {
+std::array<uint32_t, 5> __attribute__((noinline)) convert_state(__m256i x) {
+  std::array<uint32_t, 5> r;
+  x = _mm256_permutevar8x32_epi32(x, _mm256_setr_epi32(1, 3, 5, 7, 6, 0, 0, 0));
+  const __m256i mask = _mm256_setr_epi32(-1, -1, -1, -1, -1, 0, 0, 0);
+  _mm256_maskstore_epi32(reinterpret_cast<int32_t *>(r.data()), mask, x);
+  return r;
+}
+
+void rule30_avx2(save_state ss_func) {
   puts("Performing AVX2 version");
   // state size is 160 bits.
   // first three elements are only valid for upper 32 bits.
@@ -73,7 +81,10 @@ void rule30_avx2() {
     // this fixes the lower 32 bits of the first three elements.
     x = _mm256_permutevar8x32_epi32(x, shuffle);
     i += 16;
-    if (!(i & (i + 1)))
+    const uint64_t next = i + 1;
+    if (!(next & interval) && ss_func)
+      ss_func(i, convert_state(x));
+    if (!(i & next))
       report(x, i);
   }
 }

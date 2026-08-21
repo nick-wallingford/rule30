@@ -3,7 +3,7 @@
 
 static constexpr int xor_or = _MM_TERNLOG_A ^ (_MM_TERNLOG_B | _MM_TERNLOG_C);
 
-void rule30_avx512() {
+void rule30_avx512(save_state ss_func) {
   puts("Performing AVX512 version");
   __m256i x = _mm256_setr_epi64x(0, 0, 0, 1);
   report(x, 0);
@@ -48,7 +48,11 @@ void rule30_avx512() {
     x = _mm256_ternarylogic_epi64(x, _mm256_add_epi64(x, x), _mm256_slli_epi64(x, 2), xor_or);
     x = _mm256_permutevar8x32_epi32(x, shuffle);
     i += 16;
-    if (!(i & (i + 1)))
+
+    const uint64_t next = i + 1;
+    if (!(next & interval) && ss_func)
+      ss_func(i, convert_state(x));
+    if (!(i & next))
       report(x, i);
   }
 }
