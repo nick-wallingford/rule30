@@ -43,6 +43,26 @@ certifier::certifier(certify_function f, uint8_t n, const std::filesystem::path 
       std::println("incorrect gap between {} and {}. Gap is {}, must be {}.", prev, x, gap, interval + 1);
       std::terminate();
     }
+    if (!(x & (x + 1))) {
+      uint64_t value = 0;
+      for (size_t i = 40; i--;)
+        if (s[i] == 'f' || s[i] == 'F')
+          value += 4;
+        else {
+          uint8_t x = s[i];
+          if ('0' <= x && x <= '9')
+            x ^= '0';
+          else if ('a' <= x && x <= 'f')
+            x -= 'a' - 10;
+          else if ('A' <= x && x <= 'F')
+            x -= 'A' - 10;
+
+          for (; x & 1; x >>= 1)
+            ++value;
+          break;
+        }
+      std::println("cert file attests {} {}", std::countr_one(x), value);
+    }
     prev = x;
   }
 
