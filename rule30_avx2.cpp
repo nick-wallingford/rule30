@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <exception>
 #include <iostream>
+#include <print>
 
 void __attribute__((noinline)) report(__m256i x, uint64_t i) {
   std::array<uint32_t, 8> a;
@@ -103,6 +104,10 @@ void rule30_avx2(save_state ss_func) {
 }
 
 void rule30_avx2(save_state ss_func, uint64_t i, const char s[40]) {
+  if (interval != (i & interval)) {
+    std::println("initial state must be of the form {} * k - 1", interval);
+    std::terminate();
+  }
   puts("Performing AVX2 version");
   rule30_avx2(ss_func, i, eval_to_vector(s));
 }

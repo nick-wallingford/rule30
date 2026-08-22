@@ -1,5 +1,6 @@
 #include "rule30.hpp"
 #include <cstdio>
+#include <print>
 
 static constexpr int xor_or = _MM_TERNLOG_A ^ (_MM_TERNLOG_B | _MM_TERNLOG_C);
 
@@ -62,6 +63,10 @@ void rule30_avx512(save_state ss_func) {
 }
 
 void rule30_avx512(save_state ss_func, uint64_t i, const char s[40]) {
+  if (interval != (i & interval)) {
+    std::println("initial state must be of the form {} * k - 1", interval);
+    std::terminate();
+  }
   puts("Performing AVX512 version");
   rule30_avx512(ss_func, i, eval_to_vector(s));
 }
