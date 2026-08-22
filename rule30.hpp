@@ -11,7 +11,7 @@
 #include <vector>
 #include <x86intrin.h>
 
-#if 0
+#if 1
 static constexpr const uint64_t interval = 0xff'ffff'ffffllu;
 #else
 static constexpr const uint64_t interval = 0xfff'ffffllu;

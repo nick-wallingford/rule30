@@ -154,7 +154,7 @@ void certify_avx512(const attested_state *states) {
     z = _mm512_permutexvar_epi32(shuffle, z);
   }
 
-  std::array<__m256i, 8> results;
+  __m256i results[8];
   results[0] = _mm512_castsi512_si256(w);
   results[1] = _mm512_extracti64x4_epi64(w, 1);
   results[2] = _mm512_castsi512_si256(x);
