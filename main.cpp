@@ -116,6 +116,9 @@ int main(int c, const char **argv) {
         }
         rule30_128();
       }
+  } else if (m == mode::certify) {
+    certifier cert{certify_avx512, 8, cert_path};
+    cert.wait();
   } else {
     puts("unimplemented");
     return 6;
